@@ -27,6 +27,7 @@ import org.onosproject.net.device.DeviceEvent;
 import org.onosproject.net.device.DeviceListener;
 import org.onosproject.net.device.DeviceService;
 import org.onosproject.net.edge.EdgePortService;
+import org.onosproject.net.flow.FlowRuleService;
 import org.onosproject.net.host.HostService;
 import org.onosproject.net.intent.IntentService;
 import org.onosproject.net.link.LinkService;
@@ -98,6 +99,9 @@ public class EventHistoryManager
     @Reference(cardinality = ReferenceCardinality.MANDATORY)
     protected NetworkConfigService netcfgService;
 
+    @Reference(cardinality =  ReferenceCardinality.MANDATORY)
+    protected FlowRuleService flowRuleService;
+
     /** Exclude stats related events. */
     private boolean excludeStatsEvent = EXCLUDE_STATS_EVENT_DEFAULT;
 
@@ -138,7 +142,8 @@ public class EventHistoryManager
                  .addListener(clusterService, this::addEvent)
                  .addListener(edgeService, this::addEvent)
                  .addListener(intentService, this::addEvent)
-                 .addListener(netcfgService, this::addEvent);
+                 .addListener(netcfgService, this::addEvent)
+                 .addListener(flowRuleService, this::addEvent);
 
         log.info("Started");
     }
