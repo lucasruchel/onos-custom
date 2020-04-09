@@ -31,6 +31,8 @@ import org.onosproject.net.flow.FlowRule;
 import org.onosproject.net.flow.FlowRuleService;
 import org.onosproject.net.flow.IndexTableId;
 import org.onosproject.rest.AbstractWebResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -181,8 +183,12 @@ public class FlowsWebResource extends AbstractWebResource {
             if (appId != null) {
                 flowsArray.forEach(flowJson -> ((ObjectNode) flowJson).put("appId", appId));
             }
+            // TODO: Fazer log de entrada
+            Logger log = LoggerFactory.getLogger(getClass());
 
             List<FlowRule> rules = codec(FlowRule.class).decode(flowsArray, this);
+
+            log.info(String.format("Recebido %s fluxos",rules.size()));
 
             service.applyFlowRules(rules.toArray(new FlowRule[rules.size()]));
             rules.forEach(flowRule -> {
@@ -191,6 +197,10 @@ public class FlowsWebResource extends AbstractWebResource {
                         .put(FLOW_ID, Long.toString(flowRule.id().value()));
                 flowsNode.add(flowNode);
             });
+
+            // TODO: Fazer log de entrega
+            log.info(String.format("Entregue à aplicação %s fluxos",rules.size()));
+
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
