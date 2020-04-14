@@ -26,6 +26,8 @@ import org.onosproject.net.DeviceId;
 import org.onosproject.net.MastershipRole;
 import org.onosproject.net.device.DeviceService;
 import org.onosproject.rest.AbstractWebResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -209,6 +211,10 @@ public final class MastershipWebResource extends AbstractWebResource {
 
             mastershipAdminService.setRoleSync(NodeId.nodeId(nodeIdJson.asText()),
                     DeviceId.deviceId(deviceIdJson.asText()), role);
+
+            // TODO: Fazer log de entrada
+            Logger log = LoggerFactory.getLogger(getClass());
+            log.info("Recebido pacotes");
 
             return Response.ok().build();
         } catch (IOException e) {
