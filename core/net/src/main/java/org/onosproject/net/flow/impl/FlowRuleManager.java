@@ -294,8 +294,11 @@ public class FlowRuleManager
         FlowRuleOperations.Builder builder = FlowRuleOperations.builder();
         for (FlowRule flowRule : flowRules) {
             builder.add(flowRule);
+            log.info("recebido regra de fluxo: "+flowRule.deviceId().toString());
         }
         apply(builder.build());
+
+
     }
 
     @Override
