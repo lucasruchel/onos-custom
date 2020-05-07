@@ -265,6 +265,7 @@ public class DeviceFlowTable {
     public CompletableFuture<Void> add(FlowEntry rule) {
         return runInTerm(rule.id(), (bucket, term) -> {
             bucket.add(rule, term, clock);
+            log.info("Log de regras de aplicação: {}",rule);
             return null;
         });
     }
