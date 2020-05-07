@@ -526,12 +526,12 @@ public class ECFlowRuleStore
                 switch (op.operator()) {
                     case ADD:
                         entry = new DefaultFlowEntry(op.target());
-                        log.debug("Adding flow rule: {}", entry);
+                        log.info("Adding flow rule: {}", entry);
                         flowTable.add(entry);
                         return op;
                     case MODIFY:
                         entry = new DefaultFlowEntry(op.target());
-                        log.debug("Updating flow rule: {}", entry);
+                        log.info("Updating flow rule: {}", entry);
                         flowTable.update(entry);
                         return op;
                     case REMOVE:
