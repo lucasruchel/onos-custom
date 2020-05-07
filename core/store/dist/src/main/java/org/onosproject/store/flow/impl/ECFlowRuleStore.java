@@ -447,6 +447,8 @@ public class ECFlowRuleStore
         storeBatch(new FlowRuleBatchOperation(
             Collections.singletonList(new FlowRuleBatchEntry(FlowRuleOperation.ADD, rule)),
             rule.deviceId(), idGenerator.getNewId()));
+
+        log.info("Adicionando Flow Rule: {} ",rule);
     }
 
     @Override

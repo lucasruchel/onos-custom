@@ -40,6 +40,7 @@ public class InternalPortEventSerializer extends Serializer<InternalPortEvent> {
     public InternalPortEventSerializer() {
         // does not accept null
         super(false);
+
     }
 
     @Override
