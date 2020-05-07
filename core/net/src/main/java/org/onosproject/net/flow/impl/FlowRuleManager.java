@@ -294,7 +294,7 @@ public class FlowRuleManager
         FlowRuleOperations.Builder builder = FlowRuleOperations.builder();
         for (FlowRule flowRule : flowRules) {
             builder.add(flowRule);
-            log.info("recebido regra de fluxo: "+flowRule.deviceId().toString());
+            log.info("recebido regra de fluxo: {} ",flowRule.deviceId().toString());
         }
         apply(builder.build());
 
@@ -660,7 +660,7 @@ public class FlowRuleManager
                     // getProvider is customized to favor driverProvider
                     FlowRuleProvider flowRuleProvider = getProvider(deviceId);
                     if (flowRuleProvider != null) {
-                        log.trace("Sending {} flow rules to {}", batchOperation.size(), deviceId);
+                        log.info("Sending {} flow rules to {}", batchOperation.size(), deviceId);
                         flowRuleProvider.executeBatch(batchOperation);
                     }
 
