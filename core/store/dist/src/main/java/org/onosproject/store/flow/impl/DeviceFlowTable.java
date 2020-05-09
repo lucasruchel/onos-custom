@@ -279,6 +279,8 @@ public class DeviceFlowTable {
     public CompletableFuture<Void> update(FlowEntry rule) {
         return runInTerm(rule.id(), (bucket, term) -> {
             bucket.update(rule, term, clock);
+            log.info("E aqui será:{}", rule.id());
+
             return null;
         });
     }
@@ -292,6 +294,7 @@ public class DeviceFlowTable {
      * @return a future to be completed with the update result or {@code null} if the rule was not updated
      */
     public <T> CompletableFuture<T> update(FlowRule rule, Function<StoredFlowEntry, T> function) {
+        log.info("E aqui será2:{}", rule.id());
         return runInTerm(rule.id(), (bucket, term) -> bucket.update(rule, function, term, clock));
     }
 
@@ -424,6 +427,7 @@ public class DeviceFlowTable {
                     log.debug("Backup operation {} failed", operation, error);
                     failBackup(operation);
                 } else if (succeeded) {
+                    log.info("Backup completado: {}",operation);
                     succeedBackup(operation, timestamp);
                 } else {
                     log.debug("Backup operation {} failed: term mismatch", operation);

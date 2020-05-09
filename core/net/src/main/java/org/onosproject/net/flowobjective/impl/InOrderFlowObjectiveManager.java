@@ -158,6 +158,8 @@ public class InOrderFlowObjectiveManager extends FlowObjectiveManager {
         Optional<ObjectiveContext> originalContext = originalObjective.context();
         ObjectiveContext context = new InOrderObjectiveContext(deviceId, originalContext.orElse(null));
 
+        log.info("Será que aqui vai: {}", originalObjective);
+
         // Preserve Objective.Operation
         Objective objective;
         switch (originalObjective.op()) {
