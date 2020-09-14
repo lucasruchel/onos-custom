@@ -32,6 +32,8 @@ import org.onosproject.event.Event;
 import org.onosproject.mastership.MastershipEvent;
 import org.onosproject.net.Link;
 import org.onosproject.net.device.DeviceEvent;
+import org.onosproject.net.flow.FlowRule;
+import org.onosproject.net.flow.FlowRuleEvent;
 import org.onosproject.net.host.HostEvent;
 import org.onosproject.net.intent.IntentEvent;
 import org.onosproject.net.link.LinkEvent;
@@ -102,13 +104,18 @@ public class EventsCommand
             valueToShowInHelp = "-1 [no limit]")
     private long maxSize = -1;
 
+    @Option(name = "--flowrule", aliases = "-f",
+    description = "Include FlowRuleEvent",
+    required = false)
+    private boolean flowrule = false;
+
     @Override
     protected void doExecute() {
         EventHistoryService eventHistoryService = get(EventHistoryService.class);
 
         Stream<Event<?, ?>> events = eventHistoryService.history().stream();
 
-        boolean dumpAll = all || !(mastership || device || link || topology || host || cluster || intent);
+        boolean dumpAll = all || !(mastership || device || link || topology || host || cluster || intent || flowrule);
 
         if (!dumpAll) {
             Predicate<Event<?, ?>> filter = (defaultIs) -> false;
@@ -133,6 +140,9 @@ public class EventsCommand
             }
             if (intent) {
                 filter = filter.or(evt -> evt instanceof IntentEvent);
+            }
+            if (flowrule) {
+                filter = filter.or(evt -> evt instanceof FlowRuleEvent);
             }
 
             events = events.filter(filter);
@@ -249,6 +259,16 @@ public class EventsCommand
                   event.type(),
                   ((ClusterEvent) event).subject().id(),
                   event.subject());
+
+        } else if (event instanceof FlowRuleEvent) {
+            FlowRuleEvent flowRuleEvent = (FlowRuleEvent) event;
+            FlowRule rule = flowRuleEvent.subject();
+
+            print("%s %s\t dev:%s \t flowId:%s",
+                    Tools.defaultOffsetDataTime(event.time()),
+                    event.type(),
+                    rule.deviceId().toString(),
+                    rule.id().toString());
 
         } else {
             // Unknown Event?

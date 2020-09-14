@@ -27,6 +27,7 @@ import org.onosproject.net.device.DeviceEvent;
 import org.onosproject.net.device.DeviceListener;
 import org.onosproject.net.device.DeviceService;
 import org.onosproject.net.edge.EdgePortService;
+import org.onosproject.net.flow.FlowRuleService;
 import org.onosproject.net.host.HostService;
 import org.onosproject.net.intent.IntentService;
 import org.onosproject.net.link.LinkService;
@@ -96,6 +97,9 @@ public class EventHistoryManager
     protected IntentService intentService;
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY)
+    protected FlowRuleService flowRuleService;
+
+    @Reference(cardinality = ReferenceCardinality.MANDATORY)
     protected NetworkConfigService netcfgService;
 
     /** Exclude stats related events. */
@@ -115,7 +119,7 @@ public class EventHistoryManager
     private ScheduledExecutorService pruner;
 
     // pruneEventHistoryTask() execution interval in seconds
-    private long pruneInterval = 5;
+    private long pruneInterval = 100;
 
 
     @Activate
@@ -127,7 +131,7 @@ public class EventHistoryManager
                   minPriority(groupedThreads("onos/events", "history-pruner", log)));
 
         pruner.scheduleWithFixedDelay(this::pruneEventHistoryTask,
-                                      pruneInterval, pruneInterval, TimeUnit.SECONDS);
+                                      pruneInterval, pruneInterval, TimeUnit.MILLISECONDS);
 
         listeners = new ListenerTracker();
         listeners.addListener(mastershipService, this::addEvent)
@@ -138,7 +142,8 @@ public class EventHistoryManager
                  .addListener(clusterService, this::addEvent)
                  .addListener(edgeService, this::addEvent)
                  .addListener(intentService, this::addEvent)
-                 .addListener(netcfgService, this::addEvent);
+                 .addListener(netcfgService, this::addEvent)
+                 .addListener(flowRuleService, this::addEvent);
 
         log.info("Started");
     }
